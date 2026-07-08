@@ -25,8 +25,8 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const [statsRes, leadsRes] = await Promise.all([
-          fetch('http://localhost:3001/api/admin/stats'),
-          fetch('http://localhost:3001/api/admin/leads')
+          fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/admin/stats`),
+          fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/admin/leads`)
         ]);
         
         const statsData = await statsRes.json();
