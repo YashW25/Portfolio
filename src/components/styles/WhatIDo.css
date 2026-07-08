@@ -598,3 +598,83 @@
   overflow: hidden;
 }
 
+/* Popup Styles */
+.what-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  backdrop-filter: blur(8px);
+}
+
+.what-popup-content {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 650px;
+  position: relative;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  animation: popupFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes popupFadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.what-popup-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.what-popup-close:hover {
+  color: #fff;
+}
+
+.what-popup-content h3 {
+  font-size: 32px;
+  margin-top: 0;
+  color: var(--accentColor, #c481ff);
+  font-family: "Geist", sans-serif;
+  margin-bottom: 5px;
+}
+
+.what-popup-content h4 {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.what-popup-content p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 30px;
+}
+
+.what-popup-content h5 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  letter-spacing: 1px;
+}
