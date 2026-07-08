@@ -1,0 +1,16 @@
+{
+  "name": "Yash Warulkar Portfolio",
+  "short_name": "Yash Warulkar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#c481ff",
+  "description": "Portfolio of Yash Warulkar - AI Engineer and Full Stack Developer",
+  "icons": [
+    {
+      "src": "/images/Avatar.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

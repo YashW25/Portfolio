@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Visitor {
+  id        String   @id @default(uuid())
+  ip        String?
+  country   String?
+  city      String?
+  browser   String?
+  os        String?
+  device    String?
+  referrer  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cookieConsent CookieConsent?
+  leads         Lead[]
+  analyticsEvents AnalyticsEvent[]
+  chatSessions  ChatSession[]
+}
+
+model CookieConsent {
+  id        String   @id @default(uuid())
+  visitorId String   @unique
+  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  
+  essential Boolean  @default(true)
+  analytics Boolean  @default(false)
+  marketing Boolean  @default(false)
+  performance Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  visitorId String?
+  visitor   Visitor? @relation(fields: [visitorId], references: [id])
+  
+  name      String
+  email     String?
+  phone     String?
+  
+  page      String?
+  
+  messages  ContactMessage[]
+  notifications Notification[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  message   String
+  
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  type      String   // e.g., "WHATSAPP", "EMAIL"
+  status    String   // e.g., "PENDING", "SUCCESS", "FAILED"
+  errorLog  String?
+  retryCount Int     @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  visitorId String
+  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  
+  eventType String   // e.g., "PAGE_VIEW", "BUTTON_CLICK"
+  page      String
+  data      String?  // JSON string
+  
+  createdAt DateTime @default(now())
+}
+
+model ChatSession {
+  id        String   @id @default(uuid())
+  visitorId String?
+  visitor   Visitor? @relation(fields: [visitorId], references: [id])
+  
+  messages  ChatMessage[]
+  chatLeads ChatLead[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  role      String   // "user" | "assistant"
+  content   String
+  
+  createdAt DateTime @default(now())
+}
+
+model ChatLead {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  name      String?
+  email     String?
+  phone     String?
+  intent    String?  // e.g., "hiring", "website", "general"
+  
+  createdAt DateTime @default(now())
+}
+
+model FAQKnowledge {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  usageCount Int     @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

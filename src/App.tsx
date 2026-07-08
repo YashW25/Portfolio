@@ -1,43 +1,61 @@
-import { BrowserRouter } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import "./App.css";
 
-import {
-  About,
-  Contact,
-  Experience,
-  Feedbacks,
-  Hero,
-  Navbar,
-  Tech,
-  Works,
-  StarsCanvas,
-} from "./components";
-import { useEffect } from "react";
-import { config } from "./constants/config";
+const CharacterModel = lazy(() => import("./components/Character"));
+const MainContainer = lazy(() => import("./components/MainContainer"));
+const MyWorks = lazy(() => import("./pages/MyWorks"));
+
+const CookieConsentBanner = lazy(() => import("./components/CookieConsentBanner"));
+const WelcomePopup = lazy(() => import("./components/WelcomePopup"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const SammChatbot = lazy(() => import("./components/chat/SammChatbot"));
+import { LoadingProvider } from "./context/LoadingProvider";
 
 const App = () => {
-  useEffect(() => {
-    if (document.title !== config.html.title) {
-      document.title = config.html.title;
-    }
-  }, []);
-
   return (
     <BrowserRouter>
-      <div className="bg-primary relative z-0">
-        <div className="bg-hero-pattern bg-cover bg-center bg-no-repeat">
-          <Navbar />
-          <Hero />
-        </div>
-        <About />
-        <Experience />
-        <Tech />
-        <Works />
-        <Feedbacks />
-        <div className="relative z-0">
-          <Contact />
-          <StarsCanvas />
-        </div>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LoadingProvider>
+              <Suspense>
+                <MainContainer>
+                  <Suspense>
+                    <CharacterModel />
+                  </Suspense>
+                </MainContainer>
+              </Suspense>
+            </LoadingProvider>
+          }
+        />
+        <Route
+          path="/myworks"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <MyWorks />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<div>Loading Admin...</div>}>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
+      </Routes>
+      <Suspense fallback={null}>
+        <CookieConsentBanner />
+        <WelcomePopup />
+        <SammChatbot />
+      </Suspense>
+      <Analytics />
+      <SpeedInsights />
     </BrowserRouter>
   );
 };
